@@ -1,57 +1,53 @@
 import 'dart:io';
+import 'package:meu_app_calcula_imc/altura.dart';
+import 'package:meu_app_calcula_imc/pessoa.dart';
+import 'package:meu_app_calcula_imc/resultado.dart';
 import 'dart:convert';
 
-class Pessoa {
-  String nome;
-  double peso;
-  double altura;
-
-  Pessoa(this.nome, this.peso, this.altura);
-}
-
 void main() {
-  print('Calculadora de IMC');
-  print('------------------');
+  print('Bem-vindo a Calculadora de IMC');
+  print('--------------------------------');
 
-  // Ler os dados do usuário
-  print('Digite o nome da pessoa:');
-  String nome = stdin.readLineSync(encoding: utf8)!;
+  try {
+    // Ler os dados do usuário
+    print('Digite o seu nome:');
+    String nome = stdin.readLineSync(encoding: utf8)!;
 
-  print('Digite o peso da pessoa (em kg):');
-  double peso = double.parse(stdin.readLineSync(encoding: utf8)!);
+    print('Digite o seu peso em KG: ');
+    double peso = double.parse(stdin.readLineSync(encoding: utf8)!);
 
-  print('Digite a altura da pessoa (em metros):');
-  double altura = double.parse(stdin.readLineSync(encoding: utf8)!);
+    double alturaMetros = lerAltura();
 
-  // Criar uma instância da classe Pessoa
-  Pessoa pessoa = Pessoa(nome, peso, altura);
+    // Criar uma instância da classe Pessoa
+    Pessoa pessoa = Pessoa(nome, peso, alturaMetros);
 
-  // Calcular o IMC
-  double imc = pessoa.peso / (pessoa.altura * pessoa.altura);
-  String imcFormatado = imc.toStringAsFixed(1);
+    // Calcular o IMC
+    double imc = pessoa.peso / (pessoa.altura * pessoa.altura);
 
-  // Classificar o IMC
-  String classificacao = '';
+    // Classificar o IMC
+    String classificacao;
 
-  if (imc < 18.5) {
-    classificacao = 'Abaixo do peso';
-  } else if (imc < 25) {
-    classificacao = 'Peso normal';
-  } else if (imc < 30) {
-    classificacao = 'Sobrepeso';
-  } else if (imc < 35) {
-    classificacao = 'Obesidade grau 1';
-  } else if (imc < 40) {
-    classificacao = 'Obesidade grau 2';
-  } else {
-    classificacao = 'Obesidade grau 3';
+    if (imc < 16) {
+      classificacao = 'Magreza grave';
+    } else if (imc < 17) {
+      classificacao = 'Magreza moderada';
+    } else if (imc < 18.5) {
+      classificacao = 'Magreza leve';
+    } else if (imc < 25) {
+      classificacao = 'Saudável';
+    } else if (imc < 30) {
+      classificacao = 'Sobrepeso';
+    } else if (imc < 35) {
+      classificacao = 'Obesidade Grau I';
+    } else if (imc < 40) {
+      classificacao = 'Obesidade grau II(severa)';
+    } else {
+      classificacao = 'Obesidade Grau III(mórbida)';
+    }
+
+    // Exibir o resultado
+    exibirResultado(pessoa, imc, classificacao);
+  } catch (e) {
+    print('Erro: $e');
   }
-
-  // Exibir o resultado
-  print('------------------');
-  print('Nome: ${pessoa.nome}');
-  print('Peso: ${pessoa.peso} kg');
-  print('Altura: ${pessoa.altura} m');
-  print('IMC: $imcFormatado');
-  print('Classificação: $classificacao');
 }
